@@ -1,0 +1,15 @@
+stages:
+  - deploy
+
+before_script:
+  - export FIREBASE_TOKEN=$(echo $FIREBASE_TOKEN | base64 --decode)
+  - echo $FIREBASE_TOKEN > $HOME/.firebase-token
+
+deploy:
+  stage: deploy
+  image: node:12
+  script: 
+    - yarn global add firebase-tools
+    - firebase deploy --token $FIRBASE_TOKEN
+  only:
+    - main
