@@ -1,14 +1,34 @@
-name: Deploy to Firebase Hosting on push
+name: Deploy to Firebase
+
 on:
   push:
     branches:
       - master
+
 env:
   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn global add firebase-tools
-      - run: firebase deploy --token $FIREBASE_TOKEN
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+    
+    - name: Install dependencies
+      run: |
+        npm install -g firebase-tools
+    
+    - name: Decode FIREBASE_TOKEN
+      run: echo "::set-env name=FIREBASE_TOKEN::${{ env.FIREBASE_TOKEN }}"
+    
+    - name: Deploy to Firebase
+      run: |
+        firebase use --token $FIREBASE_TOKEN your-firebase-project
+        firebase deploy --token $FIREBASE_TOKEN
