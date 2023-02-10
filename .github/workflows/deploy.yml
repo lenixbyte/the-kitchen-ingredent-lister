@@ -1,0 +1,15 @@
+name: Deploy to Firebase Hosting on push
+on:
+  push:
+    branches:
+      - master
+env:
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn global add firebase-tools
+      - run: firebase deploy --token $FIREBASE_TOKEN
+```
